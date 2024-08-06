@@ -1,0 +1,151 @@
+﻿@model List<EmployeeModel>;
+@using System.Data;
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Position</th>
+            <th scope="col">Salary</th>
+            <th scope="col">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <a asp-action="Create">
+            <button type="button" class="btn btn-primary">
+            Create New Employee
+            </button>
+        </a>
+
+        @if (Model != null)
+        {
+            
+            @foreach (EmployeeModel employee in Model)
+            {    
+                <tr>
+                    <td hidden class="align-middle id">@employee.Id</td>
+                    <td class="align-middle" scope="row">@employee.FirstName</td>
+                    <td class="align-middle">@employee.LastName</td>
+                    <td class="align-middle">@employee.Position</td>
+                    <td class="align-middle">@employee.Salary</td>
+
+                    <td class="d-flex align-items-baseline">
+                        <button onclick="DeleteFunction()" class="btn btn-outline-danger mx-2">Delete</button>
+                        <button onclick="PopulateEditFields()" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#Edit">Edit</button>
+                    </td>
+
+                </tr>
+            }
+        }
+        else
+        {
+            <h1 class="display-1 text-center"> NO DATA PRESENT </h1>
+        }
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="Edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="EditLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdrop">Edit Row</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+   
+                <form id="EditForm" method="post">
+                    <input hidden id="id-edit" name="Id" />
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="fname-edit" name="FirstName" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lname-edit" name="LastName" />
+                        </div>
+                        <div class="mb-3">  
+                            <label for="exampleFormControlInput1" class="form-label">Position</label>
+                            <input type="text" class="form-control" id="pos-edit" name="Position" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Salary</label>
+                            <input type="number" class="form-control" id="salary-edit" name="Salary" />
+                        </div>
+                </form>
+                
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="EditForm" onclick="EditFormSubmission()" data-bs-dismiss="modal" class="btn btn-primary">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function DeleteFunction(){
+        const btnClicked = event.target
+        const rowToDelete = btnClicked.parentNode.parentNode
+        const columns = rowToDelete.childNodes
+        const ID = columns[1].innerHTML
+
+        $.post("/Home/Delete",
+        {
+                DeleteID: ID,
+        },
+        function (data, status) {
+            if (status == "success") {
+                rowToDelete.remove()
+            } 
+        });
+    }
+
+    function PopulateEditFields(){
+        const btnClicked = event.target 
+        const rowToDelete = btnClicked.parentNode.parentNode 
+        const columns = rowToDelete.children
+        console.log(columns)
+        
+        document.getElementById("id-edit").setAttribute("value", columns[0].innerHTML)
+        document.getElementById("fname-edit").setAttribute("value", columns[1].innerHTML)
+        document.getElementById("lname-edit").setAttribute("value", columns[2].innerHTML)
+        document.getElementById("pos-edit").setAttribute("value", columns[3].innerHTML)
+        document.getElementById("salary-edit").setAttribute("value", columns[4].innerHTML)
+   
+    }
+
+    function EditFormSubmission() {
+
+         $("#EditForm").submit(function (e) {
+
+            e.preventDefault(); 
+
+            var form = $(this);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/Edit",
+                data: form.serialize(),
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (data) {
+                    console.log("An Error Occoured: ", data)
+                }
+            });
+
+         });
+    }
+    
+
+
+</script>

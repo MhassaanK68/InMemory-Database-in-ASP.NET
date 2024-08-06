@@ -1,0 +1,28 @@
+﻿<div class="container text-center">
+    <h1 class="display-1">Create New Employee</h1>
+</div>
+
+<div class="container">
+    <form asp-action="Create" asp-controller="Home" method="post">
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="FName">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="LName">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Position</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="Pos">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Salary</label>
+            <input type="number" class="form-control" id="exampleFormControlInput1" name="Salary">
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary mb-3">Confirm identity</button>
+        </div>
+    </form>
+
+</div>
